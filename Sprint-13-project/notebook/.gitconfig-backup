@@ -1,0 +1,13 @@
+# Git Configuration Backup
+# Data: 11 de maio de 2026
+# Use this file to restore your Git configuration if needed
+
+[user]
+	name = Raimir Silva
+	email = raimir@proton.me
+
+[core]
+	safecrlf = false
+	
+[pull]
+	rebase = false
