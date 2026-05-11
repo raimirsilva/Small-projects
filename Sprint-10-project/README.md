@@ -94,7 +94,7 @@ Apresentação executiva consolidando os principais KPIs e gráficos em uma úni
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/raimirsilva/Small-projects/tree/4c4c8c0e1d69090ed8ffe9475f1dc4ec91454070/Sprint-10-project.git
+   git clone https://github.com/raimirsilva/Small-projects/Sprint-10-project.git
    cd Sprint-10-project
    ```
 
