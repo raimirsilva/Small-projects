@@ -1,5 +1,221 @@
 # 🧪 A/B Test Analysis — E-commerce
 
+**Hypothesis Prioritisation and Statistical Analysis of an A/B Test**
+
+***
+
+## 📋 About the Project
+
+This project was developed as part of the TripleTen Data Analytics bootcamp. The goal is to prioritise improvement hypotheses for an e-commerce business using the **ICE** and **RICE** frameworks, and then to analyse the results of an A/B test with statistical rigour — identifying which variant should be adopted and with what level of confidence.
+
+The analysis starts from 9 business hypotheses and real order and visit data spanning August 2019 (Group A = control, Group B = test), culminating in a formal decision to stop the experiment.
+
+***
+
+## 🎯 Objectives
+
+- Apply the ICE and RICE frameworks to prioritise e-commerce improvement hypotheses
+- Compare the rankings and identify how Reach changes the priorities
+- Analyse cumulative metrics over the experiment: revenue, average order value, and conversion
+- Detect and filter anomalies (outliers in number of orders and in revenue per order)
+- Apply statistical tests appropriate to the data distribution
+- Make an evidence-based decision on whether to stop or continue the test
+
+***
+
+## 🗂️ Project Structure
+
+### **Stage 1: Hypothesis Prioritisation**
+- Loading the `hypotheses_us.csv` dataset with 9 hypotheses scored on Reach, Impact, Confidence, and Effort
+- Computing the **ICE** score = Impact × Confidence / Effort
+- Computing the **RICE** score = Reach × Impact × Confidence / Effort
+- Comparing the two rankings and analysing the position changes
+
+### **Stage 2: Exploratory Analysis of the A/B Test**
+- Cumulative revenue per group over time
+- Cumulative average order value (revenue / number of orders)
+- Relative difference in cumulative average order value (B vs. A)
+- Daily conversion rate per group (orders / visits)
+- Relative difference in cumulative conversion (B vs. A)
+
+### **Stage 3: Anomaly Detection and Filtering**
+- Identifying users with a number of orders above the 99th percentile (> 4 orders)
+- Scatter plot of order values per group
+- Identifying orders with revenue above the 99th percentile (> $900.90)
+- Filtering the raw data to create the clean dataset
+
+### **Stage 4: Statistical Tests**
+- Normality check with Shapiro-Wilk (rationale for using Mann-Whitney U)
+- **Conversion:** Two-proportion z-test — raw and filtered data
+- **Average order value:** Mann-Whitney U (non-parametric) — raw and filtered data
+- Applying the **Bonferroni correction** (α/k = 0.025) for multiple comparisons
+
+### **Stage 5: Final Decision**
+- Synthesis of the results with and without outlier filtering
+- Evidence-based decision to stop the test and adopt variant B
+
+***
+
+## 📊 Datasets
+
+### **Files**
+
+| File | Records | Description |
+|---------|:---------:|-----------|
+| `hypotheses_us.csv` | 9 | Improvement hypotheses with ICE/RICE scores |
+| `orders_us.csv` | 1,197 | Transactions over the experiment period |
+| `visits_us.csv` | 62 | Daily visits per group (A and B) |
+
+### **Column Descriptions**
+
+**hypotheses_us.csv**
+
+| Column | Description |
+|--------|-----------|
+| `Hypothesis` | Description of the hypothesis |
+| `Reach` | Estimated reach (1–10) |
+| `Impact` | Expected impact (1–10) |
+| `Confidence` | Confidence in the hypothesis (1–10) |
+| `Effort` | Implementation effort (1–10) |
+
+**orders_us.csv**
+
+| Column | Description |
+|--------|-----------|
+| `transactionId` | Unique order identifier |
+| `visitorId` | Visitor identifier |
+| `date` | Transaction date |
+| `revenue` | Order value ($) |
+| `group` | Experiment group: A (control) or B (test) |
+
+**visits_us.csv**
+
+| Column | Description |
+|--------|-----------|
+| `date` | Record date |
+| `group` | Experiment group: A or B |
+| `visits` | Total visits on that day |
+
+***
+
+## 📈 Key Results
+
+### **Hypothesis Prioritisation**
+
+| Hypothesis | Reach | ICE rank | RICE rank | Movement |
+|----------|:-----:|:--------:|:---------:|:---------:|
+| Add a subscription form to all main pages | 10 | 3rd | **1st** | ↑ 2 pos. |
+| Add product recommendation blocks | 8 | 5th | **2nd** | ↑ 3 pos. |
+| Launch a promotion (birthday discounts) | 1 | 1st | 5th | ↓ 4 pos. |
+| Change the category structure | 8 | 8th | 6th | ↑ 2 pos. |
+
+RICE repositioned high-Reach hypotheses (such as the subscription form) and penalised low-Reach ones (such as the birthday promotion), revealing that ICE on its own can prioritise initiatives of limited impact.
+
+### **Statistical Tests**
+
+| Metric | Raw Data | Filtered Data | Sig. (α=0.05)? | Sig. (α_Bonf=0.025)? |
+|---------|:------------:|:---------------:|:--------------:|:--------------------:|
+| Conversion B vs A | +15.4% (p=0.0167) | **+16.4% (p=0.0126)** | **Yes** | **Yes** |
+| Average order value B vs A | +25.2% (p=0.6915) | -1.5% (p=0.9332) | No | No |
+
+### **Decision: Stop the test — Group B is the winner**
+
+- Group B's conversion rate is **+16.4% higher** than Group A's (3.02% vs 2.59%), with p = 0.0126 — a significant result even after the Bonferroni correction
+- The +25.2% difference in average order value in the raw data **disappears completely** after outlier filtering (-1.5%, p = 0.93) — it was sampling noise
+- Group B's conversion advantage stayed positive and stable from ~09/08 and persisted to the end of the experiment
+- With more than 18,000 visits per group and 31 days of collection, the sample size is sufficient to stop
+
+***
+
+## 🛠️ Technologies Used
+
+- **Pandas** — Data manipulation and analysis
+- **NumPy** — Numerical operations and percentile computation
+- **Matplotlib** — Data visualisation and time-series charts
+- **SciPy** — Shapiro-Wilk and Mann-Whitney U tests
+- **Statsmodels** — Two-proportion z-test
+- **Jupyter Notebook** — Interactive development and documentation
+
+***
+
+## 🚀 How to Run
+
+### **Prerequisites**
+
+```
+python >= 3.8
+jupyter notebook
+pandas
+numpy
+matplotlib
+scipy
+statsmodels
+```
+
+### **Installation**
+
+```bash
+# Clone the repository
+git clone https://github.com/raimirsilva/ab-test-analysis.git
+
+# Go to the directory
+cd ab-test-analysis
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start Jupyter Notebook
+jupyter notebook
+```
+
+### **Execution**
+
+Make sure the files `hypotheses_us.csv`, `orders_us.csv`, and `visits_us.csv` are in `../data/` relative to the notebook, or adjust the paths in the reading cell. Then open `ABtests.ipynb` and run the cells in sequence.
+
+***
+
+## 🎓 Key Takeaways
+
+This project demonstrates competencies in:
+
+- **Strategic prioritisation** with the ICE and RICE frameworks — and how the Reach factor changes product decisions
+- **Time-series analysis** of business metrics (cumulative revenue, conversion, average order value)
+- **Anomaly detection** via percentiles and visual dispersion — and how outliers distort conclusions
+- **Selection of statistical tests** appropriate to the data distribution (normality check, Mann-Whitney U)
+- **Type I error control** with the Bonferroni correction across multiple comparisons
+- **Data storytelling** — separating the real effect (conversion) from the noise (average order value inflated by outliers)
+
+***
+
+## 👤 Author
+
+**Raimir Silva**
+
+- GitHub: [@raimirsilva](https://github.com/raimirsilva)
+- LinkedIn: [Raimir Silva](https://linkedin.com/in/raimir-silva)
+- Email: raimirsilva@icloud.com
+
+***
+
+## 📄 Licence
+
+This project was developed as part of the **TripleTen Data Analytics** bootcamp for educational and portfolio purposes.
+
+***
+
+**⭐ If this project was useful to you, consider giving the repository a star!**
+
+<br>
+
+***
+***
+
+<br>
+
+***
+
+# 🧪 A/B Test Analysis — E-commerce
+
 **Priorização de Hipóteses e Análise Estatística de Teste A/B**
 
 ***

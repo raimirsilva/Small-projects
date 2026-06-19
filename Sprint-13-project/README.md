@@ -1,5 +1,214 @@
 # 🏋️ Gym Churn Prediction
 
+**Predicting Customer Churn in a Gym Chain with Machine Learning**
+
+***
+
+## 📋 About the Project
+
+This project was developed as part of the TripleTen Data Analytics bootcamp. The goal is to identify customers at risk of cancellation (churn) in an American gym chain, combining **exploratory data analysis**, **binary classification models**, and **segmentation via clustering**.
+
+The analysis starts from a dataset of 4,000 customers with 14 behavioural and contractual features, and delivers both a predictive model and segment profiles with concrete retention recommendations.
+
+***
+
+## 🎯 Objectives
+
+- Understand the profile of customers who cancel vs. those who stay
+- Identify the variables with the greatest predictive power over churn
+- Build and compare binary classification models (Logistic Regression and Random Forest)
+- Segment the customer base into homogeneous groups with K-Means
+- Propose data-driven retention strategies for each segment
+
+***
+
+## 🗂️ Project Structure
+
+### **Stage 1: Loading and Initial Exploration**
+- Importing the `gym_churn_us.csv` dataset
+- Analysing the data structure (types, nulls, duplicates)
+- Descriptive statistics and identification of class imbalance (~26.5% churn)
+
+### **Stage 2: Group Analysis**
+- Comparing means between customers who stayed (Churn=0) and those who left (Churn=1)
+- Identifying the factors most associated with churn
+
+### **Stage 3: Distributions and Histograms**
+- Visual analysis of 6 key variables by churn group
+- Identifying patterns: contract, frequency, lifetime, additional spending
+
+### **Stage 4: Correlation Analysis**
+- Pearson correlation matrix with a heatmap
+- Ranking of correlation with the target variable `Churn`
+- Detecting multicollinearity between features
+
+### **Stage 5: Binary Classification Models**
+- Train/test split (80/20), normalisation with `StandardScaler`
+- **Model 1:** Logistic Regression — linear baseline, highly interpretable
+- **Model 2:** Random Forest — ensemble of 100 decision trees
+- Comparison of accuracy, precision, and recall (sensitivity)
+
+### **Stage 6: K-Means Clustering**
+- Standardising the data and analysing a hierarchical dendrogram
+- Segmentation into 5 clusters with K-Means
+- Analysis of mean profiles and churn rate per group
+
+### **Stage 7: Conclusions and Recommendations**
+- Synthesis of the critical retention factors
+- Personalised marketing strategies per segment
+
+***
+
+## 📊 Dataset
+
+### **File**
+`gym_churn_us.csv`
+
+### **Column Descriptions**
+
+| Column | Description |
+|--------|-----------|
+| `gender` | Customer gender (binary) |
+| `Near_Location` | Lives near the gym (1 = yes) |
+| `Partner` | Came via a partner company (1 = yes) |
+| `Promo_friends` | Referred by a friend (1 = yes) |
+| `Phone` | Provided a contact phone (1 = yes) |
+| `Contract_period` | Contract length in months (1, 6, or 12) |
+| `Group_visits` | Takes part in group classes (1 = yes) |
+| `Age` | Customer age |
+| `Avg_additional_charges_total` | Average spend on additional services ($) |
+| `Month_to_end_contract` | Months remaining on the contract |
+| `Lifetime` | Time as a customer (months) |
+| `Avg_class_frequency_total` | Average visit frequency (total) |
+| `Avg_class_frequency_current_month` | Average visit frequency (current month) |
+| `Churn` | Cancellation: 1 = left, 0 = stayed (target variable) |
+
+**Dimensions:** 4,000 customers × 14 columns | No missing values | No duplicates
+
+***
+
+## 📈 Key Results
+
+### **Classification Model**
+
+| Metric | Logistic Regression | Random Forest |
+|---------|:-------------------:|:-------------:|
+| Accuracy | **92.25%** | 91.50% |
+| Precision | **85.42%** | 83.85% |
+| Recall (Sensitivity) | **82.83%** | 81.31% |
+
+**Logistic Regression** outperformed Random Forest on every metric, indicating that the relationships between the features and churn are predominantly linear in this dataset.
+
+### **Cluster Segmentation**
+
+| Cluster | Customers | Churn Rate | Profile |
+|---------|:--------:|:-------------:|--------|
+| Cluster 2 | 941 | 2.2% | Long contracts (~12 months), highest engagement |
+| Cluster 1 | 746 | 5.5% | Highest visit frequency (2.94/week) |
+| Cluster 3 | 631 | 26.9% | 100% referred by friends — churn at the average |
+| Cluster 4 | 544 | 45.0% | None live near the gym |
+| Cluster 0 | 1,138 | 51.3% | Short contracts, low engagement |
+
+Clusters 0 and 4 concentrate ~78% of all churners in the base.
+
+### **Factors Most Associated with Churn**
+
+Variables with a moderate negative correlation (the lower the value, the higher the risk of leaving):
+- `Lifetime` — how long the customer has been with the gym
+- `Avg_class_frequency_current_month` — recent visit frequency
+- `Age` — younger customers leave more
+- `Contract_period` — short contracts = higher risk
+- `Month_to_end_contract` — proximity to the end of the contract
+
+***
+
+## 🛠️ Technologies Used
+
+- **Pandas** — Data manipulation and analysis
+- **NumPy** — Numerical operations
+- **Matplotlib & Seaborn** — Data visualisation
+- **Scikit-learn** — ML models, pre-processing, and metrics
+- **SciPy** — Hierarchical clustering (dendrogram)
+- **Jupyter Notebook** — Development and documentation
+
+***
+
+## 🚀 How to Run
+
+### **Prerequisites**
+```bash
+python >= 3.8
+jupyter notebook
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+scipy
+```
+
+### **Installation**
+```bash
+# Clone the repository
+git clone https://github.com/raimirsilva/gym-churn-prediction.git
+
+# Go to the directory
+cd gym-churn-prediction
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start Jupyter Notebook
+jupyter notebook
+```
+
+### **Execution**
+Make sure the file `gym_churn_us.csv` is in `../data/` relative to the notebook, or adjust the path in the reading cell. Then open `gym-project.ipynb` and run the cells in sequence.
+
+***
+
+## 🎓 Key Takeaways
+
+This project demonstrates competencies in:
+
+- **Exploratory data analysis (EDA)** with a focus on binary variables and class imbalance
+- **Pre-processing** with normalisation and a correct train/test split (no data leakage)
+- **Binary classification** comparing a linear algorithm and an ensemble
+- **Metrics beyond accuracy** — precision, recall, and their importance in business contexts
+- **Unsupervised clustering** with K-Means and dendrogram analysis
+- **Data storytelling** — translating technical results into actionable recommendations
+
+***
+
+## 👤 Author
+
+**Raimir Silva**
+
+- GitHub: [@raimirsilva](https://github.com/raimirsilva)
+- LinkedIn: [Raimir Silva](https://linkedin.com/in/raimir-silva)
+- Email: raimirsilva@icloud.com
+
+***
+
+## 📄 Licence
+
+This project was developed as part of the **TripleTen Data Analytics** bootcamp for educational and portfolio purposes.
+
+***
+
+**⭐ If this project was useful to you, consider giving the repository a star!**
+
+<br>
+
+***
+***
+
+<br>
+
+***
+
+# 🏋️ Gym Churn Prediction
+
 **Previsão de Rotatividade de Clientes em Academia com Machine Learning**
 
 ***
@@ -186,7 +395,7 @@ Este projeto demonstra competências em:
 
 - GitHub: [@raimirsilva](https://github.com/raimirsilva)
 - LinkedIn: [Raimir Silva](https://linkedin.com/in/raimir-silva)
-- Email: raimir@proton.me
+- Email: raimirsilva@icloud.com
 
 ***
 
